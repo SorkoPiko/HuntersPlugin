@@ -1,0 +1,396 @@
+on load:
+	clear {recipeIDs::*}
+	load yaml "huntersSettings.yml" as "settings"
+	set {helmet} to yaml value "items.armourHelmet.item" from "settings"
+	set {chestplate} to yaml value "items.armourChestplate.item" from "settings"
+	set {leggings} to yaml value "items.armourLeggings.item" from "settings"
+	set {boots} to yaml value "items.armourBoots.item" from "settings"
+	loop yaml node keys "items" from "settings":
+		{hunters::crafted::%loop-value%} is not true
+		enableCraft(loop-value)
+
+function raycast(p: player, length: number, dmg: number):
+	set {_item} to yaml value "items.sword.item" from "settings"
+	remove 1 of {_item} from {_p}
+	set {_x} to 0
+	set {_l} to 0
+	loop {_length} times:   #loops as many times as long as the length from the function input
+		add 1 to {_x}
+		add 1 to {_l}
+		set {_rg%{_x}%} to location {_l} meters infront of {_p}
+		set {_rg%{_x}%} to location 1.62 meters above {_rg%{_x}%} #aligns with where player is looking better
+	# all of the locations are saved as soon as the function is called, effects such as particles can be applied afterwards.
+	set {_x} to 0
+	loop {_length} times:
+		add 1 to {_x}
+		show 1 white dust at {_rg%{_x}%} #change color or particle type
+		loop entities in radius 1.75 around {_rg%{_x}%}:
+			loop-entity is not {_p}
+			make {_p} damage loop-entity by {_dmg}
+			give 1 of {_item} to {_p}
+			stop #if you want your projectile to pierce entities, delete this line
+		loop blocks in radius 0.5 around {_rg%{_x}%}:
+			if loop-block is not passable:
+				give 1 of {_item} to {_p}
+				stop #projectile does not go through blocks, but passes through expected blocks.
+		wait 1 tick
+	give 1 of {_item} to {_p}
+
+on death of player:
+	attacker is player
+	if attacker is wearing {helmet}:
+		if attacker is wearing {chestplate}:
+			if attacker is wearing {leggings}:
+				if attacker is wearing {boots}:
+					give 1 of yaml value "items.token.item" from "settings" to attacker
+	give 1 of yaml value "items.token.item" from "settings" to attacker
+	if victim is {hunters::bounties::%attacker's uuid%}:
+		add 1 to {hunters::bountyPoints::%attacker's uuid%}
+		resetbounty(attacker)
+		send "&e+1 Bounty Point (Total: %{hunters::bountyPoints::%attacker's uuid%}%)" to attacker
+		send "&aYou have been assigned a new bounty target! Your target is &c%{hunters::bounties::%attacker's uuid%}%&a!" to attacker
+	
+on join:
+	loop {recipeIDs::*}:
+		unlock recipe loop-value for player
+	if {hunters::bounties::%player's uuid%} is not set:
+		{hunters::joinBounty} is true
+		resetbounty(player)
+		send "&aYou have been assigned a bounty target! Your target is &c%{hunters::bounties::%player's uuid%}%&a!" to player
+	
+command /joinbounty <boolean>:
+	permission: hunters.admin
+	trigger:
+		if arg 1 is true:
+			set {hunters::joinBounty} to true
+			send "&aPlayers will now be assigned a bounty target when they join!" to player
+		else:
+			set {hunters::joinBounty} to false
+			send "&aPlayers will no longer be assigned a bounty target when they join!" to player
+
+command /reset:
+	permission: hunters.reset
+	trigger:
+		clear {hunters::*}
+		send "&aThe plugin has been reset!" to player
+
+command /resetbounty [<player>] [<string>]:
+	permission: hunters.resetbounty
+	trigger:
+		if arg 1 is set:
+			resetbounty(arg 1)
+			if arg 2 is not "silent":
+				send "&aYou have been assigned a new bounty target! Your target is &c%{hunters::bounties::%arg 1's uuid%}%&a!" to arg 1
+			send "&e%arg 1%&a's bounty target has been set to &c%{hunters::bounties::%arg 1's uuid%}%&a!" to player
+		else:
+			resetbounty(player)
+			send "&aYou have been assigned a new bounty target! Your target is &c%{hunters::bounties::%player's uuid%}%&a!" to player
+
+command /bountyallonline:
+	permission: hunters.bountyallonline
+	trigger:
+		loop all players:
+			resetbounty(loop-player)
+			send "&aYou have been assigned a new bounty target! Your target is &c%{hunters::bounties::%loop-player's uuid%}%&a!" to loop-player
+		send "&aAll bounty targets have been set!" to player
+
+command /bountyall [<string>]:
+	permission: hunters.bountyall
+	trigger:
+		loop all offline players:
+			resetbounty(loop-value)
+			if arg 1 is not "silent":
+				send "&aYou have been assigned a new bounty target! Your target is &c%{hunters::bounties::%loop-value's uuid%}%&a!" to loop-value
+		send "&aAll bounty targets have been reset!" to player
+
+command /clearbounty <player>:
+	permission: hunters.clearbounty
+	trigger:
+		clear {hunters::bounties::%arg 1's uuid%}
+		send "&aYou no longer have a bounty target!" to arg 1
+		send "&e%arg 1%&a's bounty target has been cleared!" to player
+
+command /clearbountyall:
+	permission: hunters.clearbountyall
+	trigger:
+		clear {hunters::bounties::*}
+		send "&aAll bounty targets have been cleared!" to player
+
+command /exclude <player>:
+	permission: hunters.exclude
+	trigger:
+		add arg 1 to {hunters::excluded::*}
+		send "&e%arg 1%&a has been excluded from bounty targets!" to player
+	
+command /include <player>:
+	permission: hunters.include
+	trigger:
+		remove arg 1 from {hunters::excluded::*}
+		send "&e%arg 1%&a has been included in bounty targets!" to player
+
+function resetbounty(attacker: player):
+	set {_bounty} to {_attacker}
+	while true is true:
+		set {_bounty} to random element of all offline players
+		{_bounty} is not {_attacker}
+		{_bounty} is not {hunters::bounties::%{_attacker}'s uuid%}
+		{hunters::excluded::*} does not contain {_bounty}
+		exit 1 loop
+	set {hunters::bounties::%{_attacker}'s uuid%} to {_bounty}
+
+command /bountypoints:
+	trigger:
+		send "&aYou have &e%{hunters::bountyPoints::%player's uuid%}%&a bounty points!" to player
+
+command /setbounty <player> <player>:
+	permission: hunters.setbounty
+	trigger:
+		set {hunters::bounties::%arg 1's uuid%} to arg 2
+		send "&e%arg 1%&a's bounty target has been set to &c%arg 2%&a!" to player
+		send "&aYou have been assigned a new bounty target! Your target is &c%{hunters::bounties::%arg 1's uuid%}%&a!" to arg 1
+
+command /points <player>:
+	permission: hunters.viewpoints
+	trigger:
+		send "&e%arg 1%&a has &e%{hunters::bountyPoints::%arg 1's uuid%}%&a bounty points!" to player
+
+command /setpoints <number> [<player>]:
+	permission: hunters.setpoints
+	trigger:
+		if arg 2 is set:
+			set {hunters::bountyPoints::%arg 2's uuid%} to arg 1
+			send "&aYou have set &e%arg 2%'s&a bounty points to &e%arg 1%&a!" to player
+		else:
+			set {hunters::bountyPoints::%player's uuid%} to arg 1
+			send "&aYou now have &e%{hunters::bountyPoints::%player's uuid%}%&a bounty points!" to player
+
+command /customitem <string>:
+	permission: hunters.customitem
+	trigger:
+		give 1 of yaml value "items.%arg 1%.item" from "settings" to player
+
+command /bounty:
+	trigger:
+		if {hunters::bounties::%player's uuid%} is not set:
+			set {hunters::bounties::%player's uuid%} to random element of all offline players
+			send "&aYou have been assigned a new bounty target! Your target is &c%{hunters::bounties::%player's uuid%}%&a!" to player
+		else:
+			send "&aYour bounty target is &c%{hunters::bounties::%player's uuid%}%&a!" to player
+
+function hasKillTokens(count: number, p: player) :: boolean:
+	if {_p} has {_count} of yaml value "items.token.item" from "settings":
+		return true
+	else:
+		return false
+
+function hasBountyPoints(count: number, p: player) :: boolean:
+	if {hunters::bountyPoints::%{_p}'s uuid%} is greater than or equal to {_count}:
+		return true
+	else:
+		return false
+
+command /debug <string> <text>:
+	trigger:
+		set yaml value "items.%arg 1%.item" from "settings" to player's tool named "&e%arg 2%" with custom model data 1
+		give 1 of player's tool named "&e%arg 2%" with custom model data 1 to player
+		save yaml "settings"
+
+every 1 second:
+	loop all players:
+		set {_maxHealth} to 10
+		if loop-player's inventory contains yaml value "items.evolvedPickaxe.item" from "settings":
+			if hasBountyPoints(yaml value "items.evolvedPickaxe.abilities.extraHeart.tokenCount" from "settings", loop-player) is true:
+				add yaml value "items.evolvedPickaxe.abilities.extraHeart.extraHealth" from "settings" to {_maxHealth}
+		if loop-player is wearing {helmet}:
+			if loop-player is wearing {chestplate}:
+				if loop-player is wearing {leggings}:
+					if loop-player is wearing {boots}:
+						if hasKillTokens(yaml value "items.armourHelmet.abilities.extraHeart.tokenCount" from "settings", loop-player) is true:
+							add yaml value "items.armourHelmet.abilities.extraHeart.extraHealth" from "settings" to {_maxHealth}
+						if hasKillTokens(yaml value "items.armourHelmet.abilities.effects.tokenCount" from "settings", loop-player) is true:
+							if loop-player has potion strength:
+								apply strength 1 to loop-player for 1 second
+							else:
+								apply strength 1 to loop-player for 10 seconds
+							if loop-player has potion regeneration:
+								apply regeneration 1 to loop-player for 1 second
+							else:
+								apply regeneration 1 to loop-player for 10 seconds
+		set {_oldHealth} to loop-player's max health
+		set loop-player's max health to {_maxHealth}
+		set loop-player's health to loop-player's health + ({_maxHealth} - {_oldHealth})
+
+command /givetokens <number>:
+	permission: hunters.givetokens
+	trigger:
+		give arg 1 of (yaml value "items.token.item" from "settings") to player
+
+command /setrecipe <string>:
+	trigger:
+		set {_item} to yaml value "items.%arg 1%.item" from "settings"
+		loop integers from 0 to 8:
+			loop yaml node keys "items" from "settings":
+				if player's slot loop-value-1 is yaml value "items.%loop-value-2%.item" from "settings":
+					add loop-value-2 to {_saveCraft::*}
+			if size of {_saveCraft::*} is loop-value:
+				add player's slot loop-value to {_saveCraft::*}
+			add player's slot loop-value to {_craft::*}
+		register new shaped recipe for {_item} using {_craft::*} with id "hunters:%arg 1%"
+		set yaml list "items.%arg 1%.recipe" from "settings" to {_saveCraft::*}
+		save yaml "settings"
+
+function enableCraft(name: string):
+	{_name} is not "token"
+	set {_craft::*} to yaml list "items.%{_name}%.recipe" from "settings"
+	loop {_craft::*}:
+		loop yaml node keys "items" from "settings":
+			if loop-value-1 is loop-value-2:
+				set {_craft::%loop-index%} to yaml value "items.%loop-value-2%.item" from "settings"
+	set {_item} to yaml value "items.%{_name}%.item" from "settings"
+	add "hunters:%{_name}%" to {recipeIDs::*}
+	register new shaped recipe for {_item} using {_craft::*} with id "hunters:%{_name}%"
+
+function slam(p: player, d: number, r: number):
+	play sound "entity.generic.explode" at {_p}
+	make {_p} damage all entities in radius {_r} around {_p} where [input is not {_p}] by {_d}
+
+on mine:
+	player's tool is yaml value "items.evolvedPickaxe.item" from "settings"
+	hasBountyPoints(yaml value "items.evolvedPickaxe.abilities.autoSmelt.tokenCount" from "settings", player) is true
+	set {_usable} to difference between {hunters::ability::%player's uuid%::blastMine::used} and now
+	if {_usable} is less than "%yaml value "items.evolvedPickaxe.abilities.blastMine.duration" from "settings"% seconds" parsed as timespan:
+		if hasBountyPoints(yaml value "items.evolvedPickaxe.abilities.blastMine.tokenCount" from "settings", player) is true:
+			set {_1} to location of event-block ~ vector(1, 1, 1)
+			set {_2} to location of event-block ~ vector(-1, -1, -1)
+		else:
+			set {_1} to location of event-block
+			set {_2} to location of event-block	
+	else:
+		set {_1} to location of event-block
+		set {_2} to location of event-block
+	clear drops
+	loop blocks within {_1} and {_2} where [hardness of input is not -1]:
+		if loop-block is nether gold ore:
+			set {_drops::*} to gold ingot
+		else:
+			set {_drops::*} to drops of loop-block using player's tool
+			loop {_drops::*}:
+				if loop-value-2 is raw iron:
+					set {_drops::%loop-index%} to (item amount of loop-value-2) of iron ingot
+				else if loop-value-2 is iron ore:
+					set {_drops::%loop-index%} to (item amount of loop-value-2) of iron ingot
+				else if loop-value-2 is deepslate iron ore:
+					set {_drops::%loop-index%} to (item amount of loop-value-2) of iron ingot
+				else if loop-value-2 is raw copper:
+					set {_drops::%loop-index%} to (item amount of loop-value-2) of copper ingot
+				else if loop-value-2 is copper ore:
+					set {_drops::%loop-index%} to (item amount of loop-value-2) of copper ingot
+				else if loop-value-2 is deepslate copper ore:
+					set {_drops::%loop-index%} to (item amount of loop-value-2) of copper ingot
+				else if loop-value-2 is raw gold:
+					set {_drops::%loop-index%} to (item amount of loop-value-2) of gold ingot
+				else if loop-value-2 is gold ore:
+					set {_drops::%loop-index%} to (item amount of loop-value-2) of gold ingot
+				else if loop-value-2 is deepslate gold ore:
+					set {_drops::%loop-index%} to (item amount of loop-value-2) of gold ingot
+				else if loop-value-2 is ancient debris:
+					set {_drops::%loop-index%} to (item amount of loop-value-2) of netherite scrap
+				else if loop-value-2 is cobblestone:
+					set {_drops::%loop-index%} to (item amount of loop-value-2) of stone
+				else if loop-value-2 is cobbled deepslate:
+					set {_drops::%loop-index%} to (item amount of loop-value-2) of deepslate
+				else if loop-value-2 is sand:
+					set {_drops::%loop-index%} to (item amount of loop-value-2) of glass
+		drop {_drops::*} at loop-block
+		set loop-block to air
+
+command /craft <string> <boolean>:
+	permission: hunters.admin
+	trigger:
+		if arg 2 is false:
+			set {hunters::crafted::%arg 1%} to true
+			remove custom recipe "hunters:%arg 1%"
+			remove "hunters:%arg 1%" from {recipeIDs::*}
+		else:
+			set {hunters::crafted::%arg 1%} to false
+			enableCraft(arg 1)
+
+on craft:
+	loop yaml node keys "items" from "settings":
+		if event-item is yaml value "items.%loop-value%.item" from "settings":
+			if yaml value "items.%loop-value%.singleCraft" from "settings" is true:
+				remove custom recipe "hunters:%loop-value%"
+				set {hunters::crafted::%loop-value%} to true
+			
+on damage:
+	if damage cause is fall:
+		set {_usable} to difference between {hunters::ability::%victim's uuid%::slam::used} and now
+		if {_usable} is less than 5 seconds:
+			if {hunters::ability::%victim's uuid%::slammed} is true:
+				set {hunters::ability::%victim's uuid%::slammed} to false
+				slam(victim, yaml value "items.axe.abilities.slam.damage" from "settings", yaml value "items.axe.abilities.slam.range" from "settings")
+				cancel event
+				stop
+	if event-projectile is arrow:
+		if attacker's tool is yaml value "items.bow.item" from "settings":
+			set {_usable} to difference between {hunters::ability::%attacker's uuid%::freeze::used} and now
+			if {_usable} is less than "%yaml value "items.bow.abilities.freeze.cooldown" from "settings"% seconds" parsed as timespan:
+				stop
+			else:
+				if hasBountyPoints(yaml value "items.bow.abilities.freeze.tokenCount" from "settings", attacker) is true:
+					set {hunters::ability::%attacker's uuid%::freeze::used} to now
+					apply slowness 1 to victim for "%yaml value "items.bow.abilities.freeze.duration" from "settings"% seconds" parsed as timespan
+	else:
+		if attacker's tool is yaml value "items.lifestealSword.item" from "settings":
+			if hasBountyPoints(yaml value "items.lifestealSword.abilities.lifesteal.tokenCount" from "settings", attacker) is true:
+				add final damage to health of attacker
+		else if attacker's tool is yaml value "items.thiefSword.item" from "settings":
+			add yaml value "items.thiefSword.abilities.extraDamage.damage" from "settings" to damage
+
+on rightclick:
+	custom model data of player's tool is 1
+	if player's tool is yaml value "items.pickaxe.item" from "settings":
+		if hasBountyPoints(yaml value "items.pickaxe.abilities.hasteMine.tokenCount" from "settings", player) is true:
+			set {_usable} to difference between {hunters::ability::%player's uuid%::hasteMine::used} and now
+			if {_usable} is less than "%yaml value "items.pickaxe.abilities.hasteMine.cooldown" from "settings"% seconds" parsed as timespan:
+				stop
+			else:
+				set {hunters::ability::%player's uuid%::hasteMine::used} to now
+				play sound "block.beacon.power_select" to player
+				apply haste 255 to player for "%yaml value "items.pickaxe.abilities.hasteMine.duration" from "settings"% seconds" parsed as timespan
+	else if player's tool is yaml value "items.evolvedPickaxe.item" from "settings":
+		if hasBountyPoints(yaml value "items.evolvedPickaxe.abilities.blastMine.tokenCount" from "settings", player) is true:
+			set {_usable} to difference between {hunters::ability::%player's uuid%::blastMine::used} and now
+			if {_usable} is less than "%yaml value "items.evolvedPickaxe.abilities.blastMine.cooldown" from "settings"% seconds" parsed as timespan:
+				stop
+			else:
+				set {hunters::ability::%player's uuid%::blastMine::used} to now
+				play sound "block.beacon.power_select" to player
+	else if player's tool is yaml value "items.shovel.item" from "settings":
+		if hasBountyPoints(yaml value "items.shovel.abilities.teleport.tokenCount" from "settings", player) is true:
+			set {_usable} to difference between {hunters::ability::%player's uuid%::teleport::used} and now
+			if {_usable} is less than "%yaml value "items.shovel.abilities.teleport.cooldown" from "settings"% seconds" parsed as timespan:
+				stop
+			else:
+				set {hunters::ability::%player's uuid%::teleport::used} to now
+				play sound "entity.enderman.teleport" to player
+				teleport player to block yaml value "items.shovel.abilities.teleport.range" from "settings" in front of the player
+	else if player's tool is yaml value "items.axe.item" from "settings":
+		if hasBountyPoints(yaml value "items.axe.abilities.slam.tokenCount" from "settings", player) is true:
+			set {_usable} to difference between {hunters::ability::%player's uuid%::slam::used} and now
+			if {_usable} is less than "%yaml value "items.axe.abilities.slam.cooldown" from "settings"% seconds" parsed as timespan:
+				stop
+			else:
+				play sound "entity.tnt.primed" to player
+				set {hunters::ability::%player's uuid%::slam::used} to now
+				set {hunters::ability::%player's uuid%::slammed} to true
+				add vector(0, (yaml value "items.axe.abilities.slam.height" from "settings"/5), 0) to player's velocity
+	else if player's tool is yaml value "items.sword.item" from "settings":
+		if hasBountyPoints(yaml value "items.sword.abilities.throw.tokenCount" from "settings", player) is true:
+			set {_usable} to difference between {hunters::ability::%player's uuid%::throw::used} and now
+			if {_usable} is less than "%yaml value "items.sword.abilities.throw.cooldown" from "settings"% seconds" parsed as timespan:
+				stop
+			else:
+				set {hunters::ability::%player's uuid%::throw::used} to now
+				play sound "entity.arrow.shoot" to player
+				raycast(player, yaml value "items.sword.abilities.throw.range" from "settings", yaml value "items.sword.abilities.throw.damage" from "settings")

@@ -1,0 +1,540 @@
+items:
+    token:
+        item:
+            ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHER_STAR
+            meta:
+                ==: ItemMeta
+                meta-type: UNSPECIFIC
+                display-name: '{"text":"","extra":[{"text":"Kill Token","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"yellow","bold":false}]}'
+                custom-model-data: 1
+    armourHelmet:
+        singleCraft: true
+        abilities:
+            extraHeart:
+                tokenCount: 1
+                tokenType: kill
+                extraHealth: 1
+            effects:
+                tokenCount: 3
+                tokenType: kill
+        item:
+            ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_HELMET
+            meta:
+                ==: ItemMeta
+                meta-type: ARMOR
+                display-name: '{"text":"","extra":[{"text":"Hunter''s Armour Helmet","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"yellow","bold":false}]}'
+                custom-model-data: 1
+                Unbreakable: true
+        recipe:
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_HELMET
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+    armourChestplate:
+        singleCraft: true
+        item:
+            ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_CHESTPLATE
+            meta:
+                ==: ItemMeta
+                meta-type: ARMOR
+                display-name: '{"text":"","extra":[{"text":"Hunter''s Armour Chestplate","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"yellow","bold":false}]}'
+                custom-model-data: 1
+                Unbreakable: true
+        recipe:
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_CHESTPLATE
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+    armourLeggings:
+        singleCraft: true
+        item:
+            ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_LEGGINGS
+            meta:
+                ==: ItemMeta
+                meta-type: ARMOR
+                display-name: '{"text":"","extra":[{"text":"Hunter''s Armour Leggings","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"yellow","bold":false}]}'
+                custom-model-data: 1
+                Unbreakable: true
+        recipe:
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_LEGGINGS
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+    armourBoots:
+        singleCraft: true
+        item:
+            ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_BOOTS
+            meta:
+                ==: ItemMeta
+                meta-type: ARMOR
+                display-name: '{"text":"","extra":[{"text":"Hunter''s Armour Boots","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"yellow","bold":false}]}'
+                custom-model-data: 1
+                Unbreakable: true
+        recipe:
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_BOOTS
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+    bow:
+        singleCraft: true
+        abilities:
+            freeze:
+                tokenCount: 1
+                tokenType: hunters
+                cooldown: 35
+                duration: 5
+        item:
+            ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: BOW
+            meta:
+                ==: ItemMeta
+                meta-type: UNSPECIFIC
+                display-name: '{"text":"","extra":[{"text":"Hunter''s Bow","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"yellow","bold":false}]}'
+                custom-model-data: 1
+                Unbreakable: true
+        recipe:
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: STRING
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: BOW
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: STRING
+    pickaxe:
+        singleCraft: true
+        abilities:
+            hasteMine:
+                tokenCount: 1
+                tokenType: hunters
+                cooldown: 120
+                duration: 15
+        item:
+            ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_PICKAXE
+            meta:
+                ==: ItemMeta
+                meta-type: UNSPECIFIC
+                display-name: '{"text":"","extra":[{"text":"Hunter''s Pickaxe","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"yellow","bold":false}]}'
+                custom-model-data: 1
+                Unbreakable: true
+        recipe:
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: STICK
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: STICK
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+    evolvedPickaxe:
+        singleCraft: true
+        abilities:
+            extraHeart:
+                tokenCount: 1
+                tokenType: hunters
+                extraHealth: 1
+            autoSmelt:
+                tokenCount: 1
+                tokenType: hunters
+            blastMine:
+                tokenCount: 2
+                tokenType: hunters
+                cooldown: 180
+                duration: 15
+        item:
+            ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_PICKAXE
+            meta:
+                ==: ItemMeta
+                meta-type: UNSPECIFIC
+                display-name: '{"text":"","extra":[{"text":"Evolved Hunter''s Pickaxe","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"yellow","bold":false}]}'
+                custom-model-data: 1
+                Unbreakable: true
+        recipe:
+        - token
+        - token
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_PICKAXE
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_PICKAXE
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+    axe:
+        singleCraft: true
+        abilities:
+            slam:
+                tokenCount: 2
+                tokenType: hunters
+                cooldown: 360
+                range: 15
+                damage: 5
+                height: 10
+        item:
+            ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_AXE
+            meta:
+                ==: ItemMeta
+                meta-type: UNSPECIFIC
+                display-name: '{"text":"","extra":[{"text":"Hunter''s Axe","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"yellow","bold":false}]}'
+                custom-model-data: 1
+                Unbreakable: true
+        recipe:
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: STICK
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: STICK
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+    sword:
+        singleCraft: true
+        abilities:
+            throw:
+                tokenCount: 1
+                tokenType: hunters
+                cooldown: 10
+                range: 15
+                damage: 5
+        item:
+            ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_SWORD
+            meta:
+                ==: ItemMeta
+                meta-type: UNSPECIFIC
+                display-name: '{"text":"","extra":[{"text":"Hunter''s Sword","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"yellow","bold":false}]}'
+                custom-model-data: 1
+                Unbreakable: true
+        recipe:
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        - token
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: STICK
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+    shovel:
+        singleCraft: true
+        abilities:
+            teleport:
+                tokenCount: 1
+                tokenType: hunters
+                cooldown: 30
+                range: 5
+        item:
+            ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_SHOVEL
+            meta:
+                ==: ItemMeta
+                meta-type: UNSPECIFIC
+                display-name: '{"text":"","extra":[{"text":"Hunter''s Shovel","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"yellow","bold":false}]}'
+                custom-model-data: 1
+                Unbreakable: true
+        recipe:
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_SHOVEL
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_INGOT
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+    thiefSword:
+        singleCraft: true
+        abilities:
+            extraDamage:
+                damage: 2
+        item:
+            ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: DIAMOND_SWORD
+            meta:
+                ==: ItemMeta
+                meta-type: UNSPECIFIC
+                display-name: '{"text":"","extra":[{"text":"Thief Sword","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"yellow","bold":false}]}'
+                custom-model-data: 1
+                Unbreakable: true
+        recipe:
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: DIAMOND_BLOCK
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: DIAMOND_BLOCK
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+            amount: 0
+    lifestealSword:
+        singleCraft: true
+        abilities:
+            lifesteal:
+                tokenCount: 5
+                tokenType: hunters
+        item:
+            ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: STONE_SWORD
+            meta:
+                ==: ItemMeta
+                meta-type: UNSPECIFIC
+                display-name: '{"text":"","extra":[{"text":"Lifesteal Sword","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"yellow","bold":false}]}'
+                custom-model-data: 1
+                Unbreakable: true
+        recipe:
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: ENCHANTED_GOLDEN_APPLE
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_BLOCK
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: ENCHANTED_GOLDEN_APPLE
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: ENCHANTED_GOLDEN_APPLE
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_BLOCK
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: ENCHANTED_GOLDEN_APPLE
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+        - lifestealSwordFragment
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: AIR
+    lifestealSwordFragment:
+        singleCraft: false
+        item:
+            ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: STICK
+            meta:
+                ==: ItemMeta
+                meta-type: UNSPECIFIC
+                display-name: '{"text":"","extra":[{"text":"Lifesteal Sword Fragment","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"yellow","bold":false}]}'
+                custom-model-data: 1
+        recipe:
+        - token
+        - token
+        - token
+        - token
+        -   ==: org.bukkit.inventory.ItemStack
+            v: 3700
+            type: NETHERITE_SWORD
+        - token
+        - token
+        - token
+        - token
